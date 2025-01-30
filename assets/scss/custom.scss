@@ -1,3 +1,103 @@
 /*
     You can add your own custom styles here.
 */
+
+/* start footer 样式 love动画 --------------------------------*/
+/*love animation*/
+.love {
+    display: inline-block;
+    /* position: relative;
+    top: .2em; */
+    font-size: 1.3em;
+    font-family: 'Open Sans';
+    color: #ff79c6;
+    -webkit-transform: scale(.66);
+    -moz-transform: scale(.66);
+    transform: scale(.66);
+    -webkit-animation: love .5s infinite cubic-bezier(0, 0.66, 1, 1) alternate-reverse;
+    -moz-animation: love .5s infinite cubic-bezier(0, 0.66, 1, 1) alternate-reverse;
+    animation: love .5s infinite cubic-bezier(0, 0.66, 1, 1) alternate-reverse;
+  }
+  
+  @-webkit-keyframes love {
+    to {
+      -webkit-transform: scale(1.1);
+    }
+  }
+  
+  @-moz-keyframes love {
+    to {
+      -moz-transform: scale(1.1);
+    }
+  }
+  
+  @keyframes love {
+    to {
+      transform: scale(1.1);
+    }
+  }
+/* end footer 样式 love动画 --------------------------------*/
+
+/* link color change -------------------------------*/
+
+/*
+*   Global style
+*/
+:root {
+  // --main-top-padding: 35px;
+
+  // @include respond(xl) {
+  //     --main-top-padding: 50px;
+  // }
+
+  // --body-background: #f5f5fa;
+  
+  // change link color
+  --accent-color: #2b79c3; 
+  // --accent-color: #34495e;
+  // --accent-color-darker: #2c3e50;
+  // --accent-color-text: #fff;
+  // --body-text-color: #707070;
+
+  // --tag-border-radius: 4px;
+
+  // --section-separation: 40px;
+
+  // --scrollbar-thumb: hsl(0, 0%, 85%);
+  // --scrollbar-track: var(--body-background);
+
+  // &[data-scheme="dark"] {
+  //     --body-background: #303030;
+  //     --accent-color: #ecf0f1;
+  //     --accent-color-darker: #bdc3c7;
+  //     --accent-color-text: #000;
+  //     --body-text-color: rgba(255, 255, 255, 0.7);
+  //     --scrollbar-thumb: hsl(0, 0%, 40%);
+  //     --scrollbar-track: var(--body-background);
+  // }
+}
+
+// footer.site-footer .powerby a:hover {
+//     /* color: rgb(8, 92, 4); */
+//     color: #2b79c3;
+//   }
+
+/* end link color change -------------------------------*/
+
+
+/**
+*   Global font family
+*/
+// :root {
+//   --sys-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Droid Sans", "Helvetica Neue";
+//   --zh-font-family: "PingFang SC", "Hiragino Sans GB", "Droid Sans Fallback", "Microsoft YaHei";
+
+//   --base-font-family: "Lato", var(--sys-font-family), var(--zh-font-family), sans-serif;
+//   --code-font-family: Menlo, Monaco, Consolas, "Courier New", var(--zh-font-family), monospace;
+// }
+
+
+
+
+
+
