@@ -10,10 +10,11 @@ customText = "[Faery Qiao](/)"
 
 [dateFormat]
 published = "Jan 02, 2006"
-lastUpdated = "Jan 02, 2006 15:04 MST"
+lastUpdated = "Jan 02 15:04 CST 2006"
 
 [sidebar]
 # emoji = "😋"
+compact = false
 subtitle = "记录日常的学习与思考"
 
 [sidebar.avatar]
@@ -22,13 +23,13 @@ local = true
 src = "img/qyx-header.jpg"
 
 [article]
-headingAnchor = false
+headingAnchor = true
 math = false
 readingTime = true
 
 [article.license]
 enabled = true
-default = "Licensed under CC BY-NC-SA 4.0"
+default = "Licensed under <a href='https://creativecommons.org/licenses/by-nc-sa/4.0/' target='_blank' title='Attribution-NonCommercial-ShareAlike 4.0 International'>CC BY-NC-SA 4.0</a>"
 
 ## Widgets
 [[widgets.homepage]]
@@ -55,9 +56,9 @@ limit = 10
 [[widgets.page]]
 type = "toc"
 
-[opengraph.twitter]
-site = ""
-card = "summary_large_image"
+#[opengraph.twitter]
+#site = ""
+#card = "summary_large_image"
 
 [defaultImage.opengraph]
 enabled = false
@@ -77,7 +78,7 @@ enabled = true
 ## Comments
 [comments]
 enabled = true
-provider = "disqus"
+provider = "giscus"
 
 [comments.disqusjs]
 shortname = ""
@@ -128,15 +129,17 @@ serverName = "cactus.chat"
 siteName = ""
 
 [comments.giscus]
-repo = ""
-repoID = ""
-category = ""
-categoryID = ""
-mapping = ""
-lightTheme = ""
-darkTheme = ""
+repo = "faeryQ/faeryq.github.io"
+repoID = "R_kgDONxtB8g"
+category = "Announcements"
+categoryID = "DIC_kwDONxtB8s4CmgrL"
+mapping = "pathname"
+lightTheme = "light"
+darkTheme = "dark"
 reactionsEnabled = 1
 emitMetadata = 0
+lang="zh-CN"
+loading="lazy"
 
 [comments.gitalk]
 owner = ""
