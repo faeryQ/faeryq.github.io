@@ -11,8 +11,13 @@ defaultContentLanguage = "zh-cn"
 # This will make .Summary and .WordCount behave correctly for CJK languages.
 hasCJKLanguage = true
 
-# Change it to your Disqus shortname before using
-# disqusShortname = "hugo-theme-stack"
+# enable emoji globally
+enableEmoji = true
+
+# set timezone
+timeZone = "Asia/Shanghai"
+
 
 [pagination]
 pagerSize = 5
+
