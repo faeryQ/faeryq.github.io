@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Pages on FaeryQ's Blog</title><link>/page/</link><description>Recent content in Pages on FaeryQ's Blog</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Sun, 06 Mar 2022 00:00:00 +0800</lastBuildDate><atom:link href="/page/index.xml" rel="self" type="application/rss+xml"/><item><title>Archives</title><link>/archives/</link><pubDate>Sun, 06 Mar 2022 00:00:00 +0800</pubDate><guid>/archives/</guid><description/></item><item><title>About</title><link>/about/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>/about/</guid><description>&lt;p>&lt;img src="https://github.com/faeryQ/faeryq.github.io/actions/workflows/deploy.yml/badge.svg"
+loading="lazy"
+alt="gh-pages deploy status"
+>&lt;/p>
+&lt;h1 id="welcome-to-my-blog">&lt;a href="#welcome-to-my-blog" class="header-anchor">&lt;/a>Welcome to my blog
+&lt;/h1>&lt;p>欢迎来到我的博客，这里记录个人的工作和学习的笔记与思考。&lt;/p>
+&lt;h2 id="关于网站">&lt;a href="#%e5%85%b3%e4%ba%8e%e7%bd%91%e7%ab%99" class="header-anchor">&lt;/a>关于网站
+&lt;/h2>&lt;ul>
+&lt;li>采用 &lt;a class="link" href="https://gohugo.io" target="_blank" rel="noopener"
+>hugo&lt;/a> 静态网站生成器&lt;/li>
+&lt;li>主题修改自 &lt;a class="link" href="https://jimmycai.com/" target="_blank" rel="noopener"
+>Jimmy&lt;/a> 的 &lt;a class="link" href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener"
+>hugo-theme-stack&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;h2 id="关于文章">&lt;a href="#%e5%85%b3%e4%ba%8e%e6%96%87%e7%ab%a0" class="header-anchor">&lt;/a>关于文章
+&lt;/h2>&lt;p>&lt;strong>郑重声明:&lt;/strong> 本博客所有文章均采用 &lt;a class="link" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh-hans" target="_blank" rel="noopener"
+>署名—非商业性使用—相同方式共享 4.0 协议国际版(CC BY-NC-SA 4.0)&lt;/a>，分享、演绎需准守以下原则:&lt;/p>
+&lt;ol>
+&lt;li>署名: 您必须给出&lt;strong>适当的署名&lt;/strong>，提供指向本许可协议的链接，同时标明是否（对原始作品）作了修改 。您可以用任何合理的方式来署名，但是不得以任何方式暗示许可人为您或您的使用背书。&lt;/li>
+&lt;li>非商业使用: 您不得将本作品用于商业目的。&lt;/li>
+&lt;li>相同方式共享: 如果您再混合、转换或者基于本作品进行创作，您必须基于与原先许可协议相同的许可协议分发您贡献的作品。&lt;/li>
+&lt;/ol>
+&lt;p>署名-非商业性使用-相同方式共享”许可协议该项许可协议规定，只要他人注明您的姓名并在以您的作品为基础创作的新作品上适用同一类型的许可协议，该他人就可基于非商业目的对您的作品重新编排、节选或者以您的作品为基础进行创作。基于您的作品创作的所有新作品都要适用同一类型的许可协议，因此适用该项协议，则对任何以您的原作为基础创作的演绎作品自然同样都不得进行商业性使用。&lt;/p></description></item><item><title>Search</title><link>/search/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>/search/</guid><description/></item></channel></rss>
