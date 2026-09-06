@@ -1,0 +1,513 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>FaeryQ's Blog</title><link>/</link><description>Recent content on FaeryQ's Blog</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Fri, 06 Sep 2024 00:00:00 +0800</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml"/><item><title>数仓面试题复盘（一）</title><link>/p/interview-dw-1/</link><pubDate>Fri, 06 Sep 2024 00:00:00 +0800</pubDate><guid>/p/interview-dw-1/</guid><description>&lt;img src="/post_imgs/5.jpg" alt="Featured image of post 数仓面试题复盘（一）" /&gt;&lt;p&gt;之前半结构化面试，大脑一片空白，出现呆头鹅现象，说不出来。这次提前准备了一下，起码没有冷场，面试全程都有在说话。以下是我准备的题目。&lt;/p&gt;
+&lt;h2 id="题目-1银行的数据质量问题及解决方案"&gt;&lt;a href="#%e9%a2%98%e7%9b%ae-1%e9%93%b6%e8%a1%8c%e7%9a%84%e6%95%b0%e6%8d%ae%e8%b4%a8%e9%87%8f%e9%97%ae%e9%a2%98%e5%8f%8a%e8%a7%a3%e5%86%b3%e6%96%b9%e6%a1%88" class="header-anchor"&gt;&lt;/a&gt;题目 1：银行的数据质量问题及解决方案
+&lt;/h2&gt;&lt;p&gt;&lt;strong&gt;问题&lt;/strong&gt;：数据散，口径乱，责任虚&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;问题的5个方面&lt;/strong&gt;：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;数据孤岛：银行系统众多，信贷、核心、中间件各成一统。nx的特殊架构：sls+frh两级架构，数据天然分散。跨系统取书需要人工对齐，成本高。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;标准口径不统一：sn贷款可能在不同系统、不同行社算法不一致。导致报表对不平，监管报送反复返工。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;数据质量本身：可以从6个维度看&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;完整性-客户手机号、证件有效期缺失&lt;/li&gt;
+&lt;li&gt;准确性：地址、职业信息随意填报&lt;/li&gt;
+&lt;li&gt;一致性：同一客户在核心和信贷证件号不一致&lt;/li&gt;
+&lt;li&gt;及时性：T+1甚至T+n业务要看实时看不到&lt;/li&gt;
+&lt;li&gt;唯一性：客户重复建档&lt;/li&gt;
+&lt;li&gt;有效性：数据符合格式但不符合业务规则&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;元数据和血缘缺失：字段什么意思、被谁用、没有数据资产目录，结果导致没有人敢改，改一个字段怕影响下游十张报表，&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;责任不清晰：数据出了问题，科技说业务录错了，业务说系统算错了，没有明确的数据owner，也没有“发现-派单-整改-复核”的闭环。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;strong&gt;这5点叠在一起都会反馈到监管保送和客户体验上。&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;解决方案&lt;/strong&gt;：不能只上工具，得组织、制度、平台一起抓。
+治理5件套+分阶段&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;组织先行：这是最容易忽略的关键的一步。成立数据治理委员会，由分管领导挂帅，业务部门指定数据owner，科技侧设数据管家，形成“谁生产谁负责”的认责机制。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;制度立规：出台数据治理办法、数据标准管理办法、数据质量管理办法、数据安全分级分类办法，把规矩定下来。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;标准统一：先做基础数据标准——客户、机构、产品、科目、币种这几类数据要做到全行唯一；再做指标标准，建立指标字典和口径说明书，每个指标说清楚业务定义、统计口径、维度、频率、数据源负责人。新建系统必须落标评审，存量系统逐步整改。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;平台承载：用元数据管理、血缘解析、数据资产目录、质量规则引擎、调度监控这几块把制度固化下来，靠人盯是不长远的。质量规则要前移到加工环节。做到事前校验、事中拦截、事后稽核。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;制度闭环：设置数据质量kpi，问题工单必须闭环，月度通报，纳入部门和行社的绩效考核。没有考核，治理一定推不动。
+落地节奏上，我建议先盘家底做资产盘点，然后挑一个痛点最突出的域做样板——通常建议从监管报送或客户信息入手，见效快、领导有感知，形成闭环机制后再向全行做推广。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;strong&gt;数据标准落不下去怎么办？&lt;/strong&gt; &lt;br&gt;
+新建系统卡评审入口+存量系统按痛点整改+落标率纳入考核&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;治理怎么衡量成效？&lt;/strong&gt; &lt;br&gt;
+质量规则覆盖率、问题工单闭环率、平均闭环时长、报送返工次数、取数需求自主化率&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="题目-2银行数据开发步骤"&gt;&lt;a href="#%e9%a2%98%e7%9b%ae-2%e9%93%b6%e8%a1%8c%e6%95%b0%e6%8d%ae%e5%bc%80%e5%8f%91%e6%ad%a5%e9%aa%a4" class="header-anchor"&gt;&lt;/a&gt;题目 2：银行数据开发步骤
+&lt;/h2&gt;&lt;p&gt;&amp;ldquo;我一般分成七个阶段，其中我认为银行和互联网最大的区别在两头：需求阶段口径必须咬死，上线阶段必须有回退。&amp;rdquo;&lt;/p&gt;
+&lt;p&gt;需求阶段——&amp;ldquo;最重要的是产出一份指标口径定义书，把业务定义、统计口径（比如是否含息、是否去重、时点是 T+1 还是月末）、统计维度、更新频度、数据源系统、业务责任人全部写清楚，让业务方签字确认。银行里大量的返工和争议，其实都源于这一步没做实。如果是监管报送类需求，还要对照监管制度原文逐条确认口径。&amp;rdquo;&lt;/p&gt;
+&lt;p&gt;设计阶段——&amp;ldquo;做数据建模，维度建模四步：选择业务过程、确定粒度、确定维度、确定事实。然后确定分层归属：ODS 贴源、DWD 明细、DWS 汇总、ADS 应用。分层的核心目的是解耦和复用，避免每个报表都从原始表重新算一遍。再输出字段级映射表，写清楚每个目标字段从哪个源字段来、加工规则是什么、清洗规则是什么，然后组织模型评审。&amp;rdquo;&lt;/p&gt;
+&lt;p&gt;开发阶段——&amp;ldquo;编码之外，银行场景有三个硬要求：一是落标，字段类型和代码值要符合数据标准；二是脱敏，身份证、手机号、账号这些敏感字段在开发测试环境和对外接口中必须脱敏；三是幂等可重跑，任务哪天重跑结果都一样，日期和分区要参数化，不能硬编码。&amp;rdquo;&lt;/p&gt;
+&lt;p&gt;测试阶段——&amp;ldquo;除了功能测试，数据类开发最重要的是数据验证：总量是否与源系统对得上、主键是否唯一、空值率是否异常、抽样明细是否对得上，还要做历史数据回溯验证。UAT 必须让业务方参与并签字，因为他们看的不是代码对不对，是数字对不对。&amp;rdquo;&lt;/p&gt;
+&lt;p&gt;上线阶段——&amp;ldquo;走变更管理流程，有上线评审和脚本审核，在投产窗口上线，必须有回退方案。上线时同步配置数据质量校验规则和调度告警，不能等出问题了才发现。&amp;rdquo;&lt;/p&gt;
+&lt;p&gt;运维与运营——&amp;ldquo;上线后纳入调度监控和 SLA 基线管理，出问题按工单闭环。最后文档归档、血缘登记、资产目录上架，让别人能找到、能看懂、敢用。&amp;rdquo;&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="题目-3如果下面法人行反馈数据有问题你要怎么办"&gt;&lt;a href="#%e9%a2%98%e7%9b%ae-3%e5%a6%82%e6%9e%9c%e4%b8%8b%e9%9d%a2%e6%b3%95%e4%ba%ba%e8%a1%8c%e5%8f%8d%e9%a6%88%e6%95%b0%e6%8d%ae%e6%9c%89%e9%97%ae%e9%a2%98%e4%bd%a0%e8%a6%81%e6%80%8e%e4%b9%88%e5%8a%9e" class="header-anchor"&gt;&lt;/a&gt;题目 3：如果下面法人行反馈数据有问题，你要怎么办？
+&lt;/h2&gt;&lt;p&gt;&amp;ldquo;这类情况我处理过不少，我的原则是先认责、再分责，先响应、再定位。而且经验上，所谓&amp;rsquo;数据有问题&amp;rsquo;，大部分其实是口径理解不一致，真正的加工错误比例并不高。所以我会按五步来做。&amp;rdquo;&lt;/p&gt;
+&lt;p&gt;第一步，先响应。不管最后是谁的问题，我先把问题受理下来、登记清楚——哪个行社、哪个报表、哪个指标、哪个时间段、期望值是多少、实际值是多少、有没有截图。当场不辩解、不甩锅，然后给一个明确的回复时限，比如&amp;rsquo;我这边先排查，今天下班前给你初步结论&amp;rsquo;。如果涉及监管报送或者对外数据，我要立刻定级并上报，不能自己扛。&lt;/p&gt;
+&lt;p&gt;第二步，分层定位。我会从上往下按五层排除：第一层看口径——对方理解的&amp;rsquo;贷款余额&amp;rsquo;和我报表里的是不是一回事，含不含息、含不含核销、时点是 T+1 还是月末，这一层就能解决掉大部分问题；第二层看展示——报表的过滤条件、单位、维度、有没有缓存没刷新；第三层看加工——ETL 逻辑、表关联关系对不对、去重逻辑、日期分区有没有取错、增量有没有漏数；第四层看源数据——源系统是不是录错了、接口是不是丢数、上游系统改造了没通知我们；第五层看规则变更——是不是业务规则、科目、认定标准最近调整过但我们没同步。
+排查手段上，我会顺着血缘从结果往回追，用另一条路径交叉算一遍，再找一段历史数据对比，同时看调度日志和质量报告。&lt;/p&gt;
+&lt;p&gt;第三步，分场景处置。如果是口径差异，我会拉上业务方和对方一起对口径，形成或更新《指标口径说明书》，双方确认，同时在报表上把口径注释写清楚；如果是加工逻辑错误，我先评估影响范围——影响哪些行社、哪些报表、有没有影响已经报出去的数据，然后走变更流程修复、回溯历史数据、并主动通知所有受影响方；如果是源数据问题，我会派单给源系统或行社在源头整改，同时评估要不要在加工侧加临时补偿逻辑；如果影响监管报送，第一时间上报，按应急预案优先保证报送口径正确，这个不能拖。&lt;/p&gt;
+&lt;p&gt;第四步，闭环。修复完不是结束，我会给对方一个书面回复，写清楚原因、影响范围、修复方案、修复时间，然后内部做个复盘，把这类问题补一条质量校验规则和监控告警，写进知识库，下次同类问题能自动发现。&lt;/p&gt;
+&lt;p&gt;第五步，长效机制。单个问题解决完，我会想这一类问题怎么少发生。比如建立统一的受理入口和服务 SLA，把常用指标的口径说明书沉淀成库，需求评审必须业务方签字，系统改造要提前通知数据侧。在省联社和法人行社之间，还可以建立联络员机制和定期的数据例会，变被动救火为主动沟通。&lt;/p&gt;
+&lt;p&gt;追问预判：&amp;ldquo;如果确实是对方理解错了，你怎么说？&amp;quot;（答：不争对错，拿着口径说明书一条一条对，用数据说话，最后形成书面共识；必要时请业务主管部门一起裁定）；&amp;ldquo;如果行社不配合整改怎么办？&amp;quot;（答：先了解原因，是能力问题还是成本问题，提供工具和支持；仍不配合则上报，通过通报和考核传导，用机制而不是个人关系推动）。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="题目-4如何进行模型设计保证模型的可扩展性和复用性"&gt;&lt;a href="#%e9%a2%98%e7%9b%ae-4%e5%a6%82%e4%bd%95%e8%bf%9b%e8%a1%8c%e6%a8%a1%e5%9e%8b%e8%ae%be%e8%ae%a1%e4%bf%9d%e8%af%81%e6%a8%a1%e5%9e%8b%e7%9a%84%e5%8f%af%e6%89%a9%e5%b1%95%e6%80%a7%e5%92%8c%e5%a4%8d%e7%94%a8%e6%80%a7" class="header-anchor"&gt;&lt;/a&gt;题目 4：如何进行模型设计？保证模型的可扩展性和复用性？
+&lt;/h2&gt;&lt;p&gt;关于模型设计，核心理念：以业务需求为导向，以维度建模为主体，通过合理的分层架构来保证模型的可扩展性和复用性。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;在方法论层面：维度建模。&lt;/li&gt;
+&lt;li&gt;在落地实践层面：公共逻辑下沉+四层架构。&lt;/li&gt;
+&lt;li&gt;在治理保证层面：规范先行+元数据管理。
+&lt;ol&gt;
+&lt;li&gt;指定统一的命名规范和字段标准，让所有人一看到表名就知道这是什么数据，减少沟通成本。&lt;/li&gt;
+&lt;li&gt;建立数据血缘和元数据字典，记录每张表的业务含义，这样当上游业务变更时能快速评估影响范围，不会牵一发而动全身。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;总的来说，好的数据模型不是一蹴而就的，它需要在实践中不断迭代优化。&lt;/p&gt;
+&lt;h2 id="题目-5开发过的风控指标"&gt;&lt;a href="#%e9%a2%98%e7%9b%ae-5%e5%bc%80%e5%8f%91%e8%bf%87%e7%9a%84%e9%a3%8e%e6%8e%a7%e6%8c%87%e6%a0%87" class="header-anchor"&gt;&lt;/a&gt;题目 5：开发过的风控指标
+&lt;/h2&gt;&lt;ol&gt;
+&lt;li&gt;征信：
+&lt;ol&gt;
+&lt;li&gt;贷款、信用卡逾期次数&lt;/li&gt;
+&lt;li&gt;信贷审核次数&lt;/li&gt;
+&lt;li&gt;账户的五级分类：正常、关注、次级、可疑、损失&lt;/li&gt;
+&lt;li&gt;特殊字符：担保物不足、强制平仓、核销&lt;/li&gt;
+&lt;li&gt;为他人担保次数，其他责任次数&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/li&gt;
+&lt;li&gt;工商：
+&lt;ol&gt;
+&lt;li&gt;成立时长&lt;/li&gt;
+&lt;li&gt;法人变更次数&lt;/li&gt;
+&lt;li&gt;地址&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/li&gt;
+&lt;li&gt;司法
+&lt;ol&gt;
+&lt;li&gt;失信&lt;/li&gt;
+&lt;li&gt;限高&lt;/li&gt;
+&lt;li&gt;涉诉&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/li&gt;
+&lt;/ol&gt;</description></item><item><title>数仓设计基础</title><link>/p/basic-design/</link><pubDate>Tue, 21 Nov 2023 00:00:00 +0800</pubDate><guid>/p/basic-design/</guid><description>&lt;img src="/post_imgs/3.jpg" alt="Featured image of post 数仓设计基础" /&gt;&lt;h2 id="关系数据模型inmon"&gt;&lt;a href="#%e5%85%b3%e7%b3%bb%e6%95%b0%e6%8d%ae%e6%a8%a1%e5%9e%8binmon" class="header-anchor"&gt;&lt;/a&gt;关系数据模型（Inmon）
+&lt;/h2&gt;&lt;h3 id="构建流程"&gt;&lt;a href="#%e6%9e%84%e5%bb%ba%e6%b5%81%e7%a8%8b" class="header-anchor"&gt;&lt;/a&gt;构建流程
+&lt;/h3&gt;&lt;p&gt;￼&lt;img src="/p/basic-design/1.jpg"
+width="914"
+height="412"
+srcset="/p/basic-design/1_hu_b4f48cf5c0ba73bf.jpg 480w, /p/basic-design/1_hu_b784eeb654b2afb4.jpg 1024w"
+loading="lazy"
+class="gallery-image"
+data-flex-grow="221"
+data-flex-basis="532px"
+&gt;&lt;/p&gt;
+&lt;h3 id="结构"&gt;&lt;a href="#%e7%bb%93%e6%9e%84" class="header-anchor"&gt;&lt;/a&gt;结构
+&lt;/h3&gt;&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;表&lt;/th&gt;
+&lt;th&gt;列&lt;/th&gt;
+&lt;th&gt;行&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;关系&lt;/td&gt;
+&lt;td&gt;属性&lt;/td&gt;
+&lt;td&gt;元组&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;实体&lt;/td&gt;
+&lt;td&gt;字段&lt;/td&gt;
+&lt;td&gt;记录&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;超键：多列的联合标识表里行记录的唯一性 &lt;br&gt;
+候选键：超键子集，某一列已可以确定表行记录的唯一性。 &lt;br&gt;
+学号和姓名构成一个超键，如果学号本身可以保证唯一性，那学号就是一个候选键&lt;/p&gt;
+&lt;h3 id="三范式3nf"&gt;&lt;a href="#%e4%b8%89%e8%8c%83%e5%bc%8f3nf" class="header-anchor"&gt;&lt;/a&gt;三范式3NF
+&lt;/h3&gt;&lt;p&gt;3NF层层依赖，满足1NF才能满足2NF，满足2NF才能满足3NF&lt;/p&gt;
+&lt;p&gt;1NF：表中行记录不可拆分 &lt;br&gt;
+2NF：表中非候选键必须依赖整个候选键集合，不能存在部分依赖 &lt;br&gt;
+3NF：表中非候选键不存在相互依赖&lt;/p&gt;
+&lt;p&gt;&lt;u&gt;如果某张表是不符合3NF的，如何变成3NF&lt;/u&gt;？ &lt;br&gt;
+把这张表拆成多张&lt;/p&gt;
+&lt;h2 id="维度数据模型kimball"&gt;&lt;a href="#%e7%bb%b4%e5%ba%a6%e6%95%b0%e6%8d%ae%e6%a8%a1%e5%9e%8bkimball" class="header-anchor"&gt;&lt;/a&gt;维度数据模型（Kimball）
+&lt;/h2&gt;&lt;h3 id="组成元素"&gt;&lt;a href="#%e7%bb%84%e6%88%90%e5%85%83%e7%b4%a0" class="header-anchor"&gt;&lt;/a&gt;组成元素
+&lt;/h3&gt;&lt;p&gt;事实：度量，值。如金额 &lt;br&gt;
+维度：事实的属性。如谁什么时间在哪买的&lt;/p&gt;
+&lt;p&gt;维度模型按业务流程领域即主题域的建立，不同的主题域可能共享某些维度（共用1张维度表），为了提高数据操作的性能和数据一致性，需要&lt;u&gt;使用一致性维度（具有相同属性和内容的维度 ）&lt;/u&gt;&lt;/p&gt;
+&lt;h4 id="事实表"&gt;&lt;a href="#%e4%ba%8b%e5%ae%9e%e8%a1%a8" class="header-anchor"&gt;&lt;/a&gt;事实表
+&lt;/h4&gt;&lt;ol&gt;
+&lt;li&gt;事务事实表：事件的记录，每发生1次事件，表中就会插入1条记录。如下单记录、付款记录。&lt;/li&gt;
+&lt;li&gt;周期快照事实表：周期性的记录事情的事实或或历史状况的平均。如月末余额，本月销量。&lt;/li&gt;
+&lt;li&gt;累积快照事实表：统计流程节点运转效率，这种表有多个流程的关键时间。如订单表的下单时间、支付时间、发货时间。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id="维度表"&gt;&lt;a href="#%e7%bb%b4%e5%ba%a6%e8%a1%a8" class="header-anchor"&gt;&lt;/a&gt;维度表
+&lt;/h4&gt;&lt;p&gt;事实的属性&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;时间维度表：互联网一般不咋用。金融会用，如账期、财年。&lt;/li&gt;
+&lt;li&gt;地理维度表&lt;/li&gt;
+&lt;li&gt;产品维度表&lt;/li&gt;
+&lt;li&gt;人员维度表&lt;/li&gt;
+&lt;li&gt;范围维度表：什么样的区间定义成低中高&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;代理键：维度表中设计一个单列。维度表本身生成的一个主键，用来映射业务的主键。实际用的较少。&lt;/p&gt;
+&lt;h3 id="构建流程-1"&gt;&lt;a href="#%e6%9e%84%e5%bb%ba%e6%b5%81%e7%a8%8b-1" class="header-anchor"&gt;&lt;/a&gt;构建流程
+&lt;/h3&gt;&lt;p&gt;￼&lt;img src="/p/basic-design/2.jpg"
+width="1074"
+height="474"
+srcset="/p/basic-design/2_hu_76d249ccb506fddc.jpg 480w, /p/basic-design/2_hu_7be6cbed03b37e72.jpg 1024w"
+loading="lazy"
+class="gallery-image"
+data-flex-grow="226"
+data-flex-basis="543px"
+&gt;&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;选择业务过程，确定事实表类型&lt;/li&gt;
+&lt;li&gt;声明粒度：业务最小的活动单元或不同维度的组合。&lt;/li&gt;
+&lt;li&gt;确认维度&lt;/li&gt;
+&lt;li&gt;确认事实（周期快照事实表中的全量型事实表快照、累积快照事实表可能没有这一步）&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;u&gt;举个例子&lt;/u&gt;
+【业务过程】:下订单 &lt;br&gt;
+【粒度】:每笔订单(拆分为单个物品) &lt;br&gt;
+【维度】:用户、商品、卖家、地域、渠道类型等(可供分析的角度) &lt;br&gt;
+【事实/度量】:订单金额等(可用于分析的数据)&lt;/p&gt;
+&lt;p&gt;【业务过程】:下订单 &lt;br&gt;
+【粒度】:每笔订单(拆分为单个物品) &lt;br&gt;
+【维度】:用户、商品、卖家、地域、渠道类型等(可供分析的角度) &lt;br&gt;
+【事实/度量】:订单金额等(可用于分析的数据)&lt;/p&gt;
+&lt;h3 id="维度规范化"&gt;&lt;a href="#%e7%bb%b4%e5%ba%a6%e8%a7%84%e8%8c%83%e5%8c%96" class="header-anchor"&gt;&lt;/a&gt;维度规范化
+&lt;/h3&gt;&lt;p&gt;消除冗余，变得符合3NF的过程。&lt;u&gt;维度数据模型（Kimball）更倾向于非规范化&lt;/u&gt;。&lt;/p&gt;
+&lt;p&gt;&lt;u&gt;不做维度规范化原因&lt;/u&gt;：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;规范化会增加表的数量，代码更加复杂&lt;/li&gt;
+&lt;li&gt;查询性能，Join会走Shuffle，热点键存在会增加单个Reduce压力。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;问题：什么时候不做维度规范化？&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;多个维度共用某些通用属性时。如：省市区不做单独维表，而是和地区一起放在一个维表里。&lt;/li&gt;
+&lt;li&gt;多个维表较小组成1个为表较小时，可以使用Mapjoin。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id="常见模型"&gt;&lt;a href="#%e5%b8%b8%e8%a7%81%e6%a8%a1%e5%9e%8b" class="header-anchor"&gt;&lt;/a&gt;常见模型
+&lt;/h3&gt;&lt;h4 id="星型模型"&gt;&lt;a href="#%e6%98%9f%e5%9e%8b%e6%a8%a1%e5%9e%8b" class="header-anchor"&gt;&lt;/a&gt;星型模型
+&lt;/h4&gt;&lt;p&gt;有1个或多个事实表构成，每个事实表关联1层多个维表。维表不是规范化的，因为只有1层，尽量冗余多的信息，满足分析的需要。 &lt;br&gt;
+星型模型新增维度调整范围较大，灵活性不足。 &lt;br&gt;
+￼￼&lt;img src="/p/basic-design/3.jpg"
+width="1262"
+height="772"
+srcset="/p/basic-design/3_hu_2bf9fe47f42d93b2.jpg 480w, /p/basic-design/3_hu_1f9a06e146117d88.jpg 1024w"
+loading="lazy"
+class="gallery-image"
+data-flex-grow="163"
+data-flex-basis="392px"
+&gt;&lt;/p&gt;
+&lt;h4 id="雪花模型"&gt;&lt;a href="#%e9%9b%aa%e8%8a%b1%e6%a8%a1%e5%9e%8b" class="header-anchor"&gt;&lt;/a&gt;雪花模型
+&lt;/h4&gt;&lt;p&gt;对星型模型为表规范化处理，把冗余信息新建维表，形成雪花形状。Kimball逐渐变Inmon。 &lt;br&gt;
+￼￼&lt;img src="/p/basic-design/4.jpg"
+width="1252"
+height="736"
+srcset="/p/basic-design/4_hu_ad65511f2d8c0cd7.jpg 480w, /p/basic-design/4_hu_e3e880db2f3c463.jpg 1024w"
+loading="lazy"
+class="gallery-image"
+data-flex-grow="170"
+data-flex-basis="408px"
+&gt;&lt;/p&gt;
+&lt;h4 id="星座模型"&gt;&lt;a href="#%e6%98%9f%e5%ba%a7%e6%a8%a1%e5%9e%8b" class="header-anchor"&gt;&lt;/a&gt;星座模型
+&lt;/h4&gt;&lt;p&gt;多个星型模型的事实表共用维表自然形成了星座模型。企业中最常用。 &lt;br&gt;
+￼￼&lt;img src="/p/basic-design/5.jpg"
+width="1410"
+height="920"
+srcset="/p/basic-design/5_hu_cc7f23942c94e81d.jpg 480w, /p/basic-design/5_hu_d3a387590e15c298.jpg 1024w"
+loading="lazy"
+class="gallery-image"
+data-flex-grow="153"
+data-flex-basis="367px"
+&gt;&lt;/p&gt;
+&lt;h2 id="data-vault模型"&gt;&lt;a href="#data-vault%e6%a8%a1%e5%9e%8b" class="header-anchor"&gt;&lt;/a&gt;Data Vault模型
+&lt;/h2&gt;&lt;h3 id="组成"&gt;&lt;a href="#%e7%bb%84%e6%88%90" class="header-anchor"&gt;&lt;/a&gt;组成
+&lt;/h3&gt;&lt;ol&gt;
+&lt;li&gt;中心表Hub：记录业务主键&lt;/li&gt;
+&lt;li&gt;链接表Link：记录业务关系&lt;/li&gt;
+&lt;li&gt;附属表Sat：记录业务描述。也叫卫星表&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Data Vault不区分数据在业务层面上正确与错误，它保留操作型系统的所有时间的所有数据，装载数据时不做数据验证、清洗等工作。符合数据湖理念。&lt;/p&gt;
+&lt;h3 id="缺点"&gt;&lt;a href="#%e7%bc%ba%e7%82%b9" class="header-anchor"&gt;&lt;/a&gt;缺点
+&lt;/h3&gt;&lt;p&gt;看起来灵活，业务复杂且数据量大时，会产生很多卫星表，卫星表相当于Kimball的事实表，下游使用卫星表时，卫星表关联时属于大表关联大表，可能会产生瓶颈，且对集群计算能力的要求比较高。&lt;/p&gt;</description></item><item><title>数仓架构</title><link>/p/dw-arch/</link><pubDate>Sun, 10 Sep 2023 00:00:00 +0800</pubDate><guid>/p/dw-arch/</guid><description>&lt;img src="/post_imgs/2.jpg" alt="Featured image of post 数仓架构" /&gt;&lt;h2 id="数据分层结构"&gt;&lt;a href="#%e6%95%b0%e6%8d%ae%e5%88%86%e5%b1%82%e7%bb%93%e6%9e%84" class="header-anchor"&gt;&lt;/a&gt;数据分层结构
+&lt;/h2&gt;&lt;h3 id="问题1为什么要进行数据分层"&gt;&lt;a href="#%e9%97%ae%e9%a2%981%e4%b8%ba%e4%bb%80%e4%b9%88%e8%a6%81%e8%bf%9b%e8%a1%8c%e6%95%b0%e6%8d%ae%e5%88%86%e5%b1%82" class="header-anchor"&gt;&lt;/a&gt;问题1:为什么要进行数据分层？
+&lt;/h3&gt;&lt;ol&gt;
+&lt;li&gt;清晰数据结构，方便在出问题时进行血缘追踪&lt;/li&gt;
+&lt;li&gt;减少重复开发：开发一些通用的中间层数据&lt;/li&gt;
+&lt;li&gt;复杂问题简单化：复杂问题分解成多个步骤，每一层只处理单一步骤。修复问题从有问题的步骤修复&lt;/li&gt;
+&lt;li&gt;屏蔽原始数据的异常：不用改一次业务就重新接入数据（数据同步时有字段映射，原始数据改了加字段就可以）&lt;/li&gt;
+&lt;li&gt;空间换时间，对数据进行预处理&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id="问题2数仓可以没有dws层吗"&gt;&lt;a href="#%e9%97%ae%e9%a2%982%e6%95%b0%e4%bb%93%e5%8f%af%e4%bb%a5%e6%b2%a1%e6%9c%89dws%e5%b1%82%e5%90%97" class="header-anchor"&gt;&lt;/a&gt;问题2:数仓可以没有DWS层吗？
+&lt;/h3&gt;&lt;p&gt;可以，在公司业务流程成熟之前，看数场景和指标体系不固定，可以只建到DWD层。架构这个东西，存在即是合理，只要合理的考虑层次的用途。&lt;/p&gt;
+&lt;h2 id="离线架构"&gt;&lt;a href="#%e7%a6%bb%e7%ba%bf%e6%9e%b6%e6%9e%84" class="header-anchor"&gt;&lt;/a&gt;离线架构
+&lt;/h2&gt;&lt;h3 id="数仓架构类型"&gt;&lt;a href="#%e6%95%b0%e4%bb%93%e6%9e%b6%e6%9e%84%e7%b1%bb%e5%9e%8b" class="header-anchor"&gt;&lt;/a&gt;数仓架构类型
+&lt;/h3&gt;&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;Inmon，三范式消除冗余。各个业务部门自己建立各个数据集市，数据集市中落物理表，报表从数据集市出 &lt;br&gt;
+￼&lt;img src="/p/dw-arch/1.jpeg"
+width="1462"
+height="734"
+srcset="/p/dw-arch/1_hu_2b153868bee9b3ba.jpeg 480w, /p/dw-arch/1_hu_747a766b4b3ddc33.jpeg 1024w"
+loading="lazy"
+class="gallery-image"
+data-flex-grow="199"
+data-flex-basis="478px"
+&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Kimball，数仓高粒度，使用灵活。由星型模式的维度表和事实表组成，数据集市是逻辑概念，不落物理表，可以选择建视图，或者干脆直接取数，因为数仓信息足够支持直接取数 &lt;br&gt;
+￼&lt;img src="/p/dw-arch/2.jpg"
+width="1396"
+height="834"
+srcset="/p/dw-arch/2_hu_f4c45b43d745d069.jpg 480w, /p/dw-arch/2_hu_11a39a9f76b466c0.jpg 1024w"
+loading="lazy"
+class="gallery-image"
+data-flex-grow="167"
+data-flex-basis="401px"
+&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;混合数仓，由Inmon三范式数仓建立Kimball数仓，可以同时继承Inmon和Kimball优点：既可以消除冗余，又能提供多维度 &lt;br&gt;
+￼&lt;img src="/p/dw-arch/3.jpg"
+width="1462"
+height="788"
+srcset="/p/dw-arch/3_hu_2cf12f3e4d56f2a8.jpg 480w, /p/dw-arch/3_hu_82c6d1e52f8a4cb6.jpg 1024w"
+loading="lazy"
+class="gallery-image"
+data-flex-grow="185"
+data-flex-basis="445px"
+&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id="结合工作经历"&gt;&lt;a href="#%e7%bb%93%e5%90%88%e5%b7%a5%e4%bd%9c%e7%bb%8f%e5%8e%86" class="header-anchor"&gt;&lt;/a&gt;结合工作经历
+&lt;/h4&gt;&lt;ol&gt;
+&lt;li&gt;HangY使用Inmon，完全和这个一模一样 &lt;br&gt;
+￼&lt;img src="/p/dw-arch/4.jpg"
+width="1424"
+height="796"
+srcset="/p/dw-arch/4_hu_703811f45289c479.jpg 480w, /p/dw-arch/4_hu_b6b09e3bfb3fa42e.jpg 1024w"
+loading="lazy"
+class="gallery-image"
+data-flex-grow="178"
+data-flex-basis="429px"
+&gt;&lt;/li&gt;
+&lt;li&gt;FenT使用Inmon&lt;/li&gt;
+&lt;li&gt;Kimball的星型模型和事实表 &lt;br&gt;
+￼&lt;img src="/p/dw-arch/5.jpg"
+width="632"
+height="403"
+srcset="/p/dw-arch/5_hu_4bafe7a93bddd021.jpg 480w, /p/dw-arch/5_hu_f96b8780a0882d83.jpg 1024w"
+loading="lazy"
+class="gallery-image"
+data-flex-grow="156"
+data-flex-basis="376px"
+&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id="离线建模"&gt;&lt;a href="#%e7%a6%bb%e7%ba%bf%e5%bb%ba%e6%a8%a1" class="header-anchor"&gt;&lt;/a&gt;离线建模
+&lt;/h3&gt;&lt;ol&gt;
+&lt;li&gt;Inmon设计思路：自上而下，业务稳定，依靠经验
+&lt;ol&gt;
+&lt;li&gt;看上游能给我们提供什么数据&lt;/li&gt;
+&lt;li&gt;依靠经验把数据转化成表需求&lt;/li&gt;
+&lt;li&gt;ETL后，把数据放入3范式数据仓库&lt;/li&gt;
+&lt;li&gt;从3范式数据仓库里取数，简单组合后形成数据各部门集市&lt;/li&gt;
+&lt;li&gt;各数据集市给BI系统供数&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/li&gt;
+&lt;li&gt;Kimball设计思路：自下而上，业务不稳定，建议不要一上来就搞大工程，先实现小目标，慢慢积累成数据仓库
+&lt;ol&gt;
+&lt;li&gt;从下游业务数据分析需求出发，了解待解决问题的业务流程、维度、指标&lt;/li&gt;
+&lt;li&gt;去上游业务系统数据源捞需要的数据（上游可能没有，得让他们提供）&lt;/li&gt;
+&lt;li&gt;捞取的数据根据下游分析的目标，转变成维度表、事实表需求，为了方便分析，会做维度退化&lt;/li&gt;
+&lt;li&gt;根据分析的领域不同，逐渐积累出一堆数据集市&lt;/li&gt;
+&lt;li&gt;数据集市的集合在逻辑上的概念就是数据仓库&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;由于ADS和DWS分界线不明，阿里新搞了一个MDS。 &lt;br&gt;
+￼&lt;img src="/p/dw-arch/8.jpg"
+width="665"
+height="427"
+srcset="/p/dw-arch/8_hu_abf5783034c14e81.jpg 480w, /p/dw-arch/8_hu_cea19879d350e10e.jpg 1024w"
+loading="lazy"
+class="gallery-image"
+data-flex-grow="155"
+data-flex-basis="373px"
+&gt;&lt;/p&gt;
+&lt;h2 id="实时架构"&gt;&lt;a href="#%e5%ae%9e%e6%97%b6%e6%9e%b6%e6%9e%84" class="header-anchor"&gt;&lt;/a&gt;实时架构
+&lt;/h2&gt;&lt;ol&gt;
+&lt;li&gt;Lambda：在数据源和数仓之间新增一个消息队列（对数据源进行流式改造，即把数据发送到消息队列），实时计算消费消息队列，数据服务层完成离线和实时的合并。保存了T+1数据，实时计算重跑时比较友好。 &lt;br&gt;
+￼&lt;img src="/p/dw-arch/6.jpg"
+width="511"
+height="496"
+srcset="/p/dw-arch/6_hu_39f7449a8ce877.jpg 480w, /p/dw-arch/6_hu_87cfc3ee5f5e0e56.jpg 1024w"
+loading="lazy"
+class="gallery-image"
+data-flex-grow="103"
+data-flex-basis="247px"
+&gt;&lt;/li&gt;
+&lt;li&gt;Kappa：去掉Lambda离线部分。 &lt;br&gt;
+缺点：
+&lt;ol&gt;
+&lt;li&gt;消息中间件缓存的数据量和回溯数据有性能瓶颈。&lt;/li&gt;
+&lt;li&gt;不同的实时流关联时，因为顺序问题而误抛。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/li&gt;
+&lt;li&gt;HSAP：Hybrid serving and analytical processing(服务分析一体化) 。本质也是Lambda，对实时和离线二次开发，统一封装。阿里云Hologres &lt;br&gt;
+￼&lt;img src="/p/dw-arch/7.jpg"
+width="639"
+height="280"
+srcset="/p/dw-arch/7_hu_295f69fbb8f52cd9.jpg 480w, /p/dw-arch/7_hu_297c3b1b1c1728fb.jpg 1024w"
+loading="lazy"
+class="gallery-image"
+data-flex-grow="228"
+data-flex-basis="547px"
+&gt;&lt;/li&gt;
+&lt;/ol&gt;</description></item><item><title>数仓概念</title><link>/p/basic-concepts/</link><pubDate>Fri, 01 Sep 2023 00:00:00 +0800</pubDate><guid>/p/basic-concepts/</guid><description>&lt;img src="/post_imgs/1.jpg" alt="Featured image of post 数仓概念" /&gt;&lt;h2 id="数仓特点"&gt;&lt;a href="#%e6%95%b0%e4%bb%93%e7%89%b9%e7%82%b9" class="header-anchor"&gt;&lt;/a&gt;数仓特点
+&lt;/h2&gt;&lt;h3 id="面向主题"&gt;&lt;a href="#%e9%9d%a2%e5%90%91%e4%b8%bb%e9%a2%98" class="header-anchor"&gt;&lt;/a&gt;面向主题
+&lt;/h3&gt;&lt;p&gt;建立数仓之前，必须先明确主题域。比如我要分析某段时间某个产品的用户特征，我去销售域的仓库里找数据就可以。&lt;/p&gt;
+&lt;h3 id="集成性"&gt;&lt;a href="#%e9%9b%86%e6%88%90%e6%80%a7" class="header-anchor"&gt;&lt;/a&gt;集成性
+&lt;/h3&gt;&lt;p&gt;这里有2点，第2点是我一直忽视的。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;从各个系统里拿数据放到一起。&lt;/li&gt;
+&lt;li&gt;把数据处理成码值统一、单位统一的符合标准的数据。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id="相对稳定"&gt;&lt;a href="#%e7%9b%b8%e5%af%b9%e7%a8%b3%e5%ae%9a" class="header-anchor"&gt;&lt;/a&gt;相对稳定
+&lt;/h3&gt;&lt;p&gt;存储稳定，很少修改和删除，一般都是重跑。&lt;/p&gt;
+&lt;h3 id="反应历史变化"&gt;&lt;a href="#%e5%8f%8d%e5%ba%94%e5%8e%86%e5%8f%b2%e5%8f%98%e5%8c%96" class="header-anchor"&gt;&lt;/a&gt;反应历史变化
+&lt;/h3&gt;&lt;p&gt;根据数据的价值、重跑成本，不同的表有不同的存储策略和生命周期
+数据存的比较久，京东淘宝几年前的订单都有。&lt;/p&gt;
+&lt;h2 id="为什么需要数据仓库"&gt;&lt;a href="#%e4%b8%ba%e4%bb%80%e4%b9%88%e9%9c%80%e8%a6%81%e6%95%b0%e6%8d%ae%e4%bb%93%e5%ba%93" class="header-anchor"&gt;&lt;/a&gt;为什么需要数据仓库？
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;需要分析的数据量较大(单批 GiB)，此时事务性数据库分析性能堪忧&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;需要通过建立索引而且会分析查询会影响在线事务。而数仓一般采用列式存储，自带索引性能加成。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;分析查询不想影响在线事务&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;需要记录历史数据&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;需要对来自不同数据库、数据源的数据进行整合、关联分析和交叉探查。比如将存储在 SLS 的用户日志和 MySQL 的用户信息进行关联分析，通过用户的行为日志建立用户画像。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;批处理分析，需要定期批量查询分析数据并生成结果，比如各种 BI 报表。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="数据库与数据仓库数据模型的区别"&gt;&lt;a href="#%e6%95%b0%e6%8d%ae%e5%ba%93%e4%b8%8e%e6%95%b0%e6%8d%ae%e4%bb%93%e5%ba%93%e6%95%b0%e6%8d%ae%e6%a8%a1%e5%9e%8b%e7%9a%84%e5%8c%ba%e5%88%ab" class="header-anchor"&gt;&lt;/a&gt;数据库与数据仓库数据模型的区别
+&lt;/h3&gt;&lt;p&gt;&lt;img src="/p/basic-concepts/diff-bt-dw-db.png"
+width="933"
+height="360"
+srcset="/p/basic-concepts/diff-bt-dw-db_hu_6f58a22995dd122c.png 480w, /p/basic-concepts/diff-bt-dw-db_hu_ffa152de6b14cde2.png 1024w"
+loading="lazy"
+alt="数据仓库与数据库的区别"
+class="gallery-image"
+data-flex-grow="259"
+data-flex-basis="622px"
+&gt;&lt;/p&gt;
+&lt;h3 id="数据仓库和数据中台的什么区别"&gt;&lt;a href="#%e6%95%b0%e6%8d%ae%e4%bb%93%e5%ba%93%e5%92%8c%e6%95%b0%e6%8d%ae%e4%b8%ad%e5%8f%b0%e7%9a%84%e4%bb%80%e4%b9%88%e5%8c%ba%e5%88%ab" class="header-anchor"&gt;&lt;/a&gt;数据仓库和数据中台的什么区别
+&lt;/h3&gt;&lt;p&gt;数据仓库的主要场景是支持管理决策和业务分析，而数据中台则是将数据服务化之后提供给业务系统，目标是将数据能力渗透到各个业务环节，不限于决策分析类场景。&lt;/p&gt;
+&lt;h3 id="数据湖"&gt;&lt;a href="#%e6%95%b0%e6%8d%ae%e6%b9%96" class="header-anchor"&gt;&lt;/a&gt;数据湖
+&lt;/h3&gt;&lt;h4 id="数据湖是如何出现应对场景是什么"&gt;&lt;a href="#%e6%95%b0%e6%8d%ae%e6%b9%96%e6%98%af%e5%a6%82%e4%bd%95%e5%87%ba%e7%8e%b0%e5%ba%94%e5%af%b9%e5%9c%ba%e6%99%af%e6%98%af%e4%bb%80%e4%b9%88" class="header-anchor"&gt;&lt;/a&gt;数据湖是如何出现，应对场景是什么
+&lt;/h4&gt;&lt;p&gt;出现了各种不同类型的数据，如音频，视频等非结构化的数据。人们意识到数据包含巨大的潜在价值，对于很多数据，即使暂时没有明确的需求，也想先留一份。 所以，妥协的办法出现了，从先处理后用，变成了先存储，以后用的时候再考虑怎么处理。这就是数据湖的处理方式。&lt;/p&gt;
+&lt;h4 id="数据仓库和数据湖的差异"&gt;&lt;a href="#%e6%95%b0%e6%8d%ae%e4%bb%93%e5%ba%93%e5%92%8c%e6%95%b0%e6%8d%ae%e6%b9%96%e7%9a%84%e5%b7%ae%e5%bc%82" class="header-anchor"&gt;&lt;/a&gt;数据仓库和数据湖的差异
+&lt;/h4&gt;&lt;p&gt;&lt;img src="/p/basic-concepts/diff-bt-dw-dl.png"
+width="1172"
+height="1356"
+srcset="/p/basic-concepts/diff-bt-dw-dl_hu_249e0797b163920a.png 480w, /p/basic-concepts/diff-bt-dw-dl_hu_2c62da3905da86ba.png 1024w"
+loading="lazy"
+alt="数据仓库和数据湖的差异"
+class="gallery-image"
+data-flex-grow="86"
+data-flex-basis="207px"
+&gt;&lt;/p&gt;
+&lt;p&gt;湖仓一体，目前作为前沿的大数据架构，数据湖和数据仓库一体正蓬勃发展，有望成为新一代的大数据应用架构。&lt;/p&gt;
+&lt;h2 id="数据模型"&gt;&lt;a href="#%e6%95%b0%e6%8d%ae%e6%a8%a1%e5%9e%8b" class="header-anchor"&gt;&lt;/a&gt;数据模型
+&lt;/h2&gt;&lt;p&gt;数据模型：表现和抽象实体和实体间的关系
+数据模型=数据组件（业务对象（如用户、商家）、指标、表等）+组件间关系+组件间规约&lt;/p&gt;
+&lt;p&gt;金字塔模型，尖是概念模型，底是物理模型&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;概念模型：确认要分析的业务过程&lt;/li&gt;
+&lt;li&gt;逻辑模型：确认粒度、维度&lt;/li&gt;
+&lt;li&gt;物理模型：真正要落表了&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id="为什么要建设数据模型"&gt;&lt;a href="#%e4%b8%ba%e4%bb%80%e4%b9%88%e8%a6%81%e5%bb%ba%e8%ae%be%e6%95%b0%e6%8d%ae%e6%a8%a1%e5%9e%8b" class="header-anchor"&gt;&lt;/a&gt;为什么要建设数据模型
+&lt;/h3&gt;&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;能全面了解该单位的业务架构图和整个业务的运行情况；改进业务流程。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;消灭信息孤岛和数据差异。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;上层业务变化不必牵一发而动全身。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;blockquote&gt;
+&lt;p&gt;建模过程中的何种手段可以有这样的好处？后面学建模的时候得思考。目前的理解是可以把变化的业务搞成确认的粒度、维度，数仓分层。解决业务的变动和数据仓库的灵活性。通过数据模型的建设，能够很好的分离出底层技术的实现和上层业务的展现。当上层业务发生变化时，通过数据模型，底层的技术实现可以非常轻松的完成业务的变动，从而达到整个数据仓库系统的灵活性。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;ol start="4"&gt;
+&lt;li&gt;是建设数仓的前期阶段，帮助数仓本身的建设。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id="建模简化过程"&gt;&lt;a href="#%e5%bb%ba%e6%a8%a1%e7%ae%80%e5%8c%96%e8%bf%87%e7%a8%8b" class="header-anchor"&gt;&lt;/a&gt;建模简化过程
+&lt;/h3&gt;&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;概念和逻辑阶段：选择业务过程，声明粒度，确认维度，定义维度属性，确认事实，确认冗余。参考业务系统开发的业务流程，看看概念和逻辑模型最后能不能输出核心的业务流程图。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;物理模型阶段：实体一般建维度表（如用户、商品等），业务过程一般用事实表&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;</description></item><item><title>Archives</title><link>/archives/</link><pubDate>Sun, 06 Mar 2022 00:00:00 +0800</pubDate><guid>/archives/</guid><description/></item><item><title>About</title><link>/about/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>/about/</guid><description>&lt;p&gt;&lt;img src="https://github.com/faeryQ/faeryq.github.io/actions/workflows/deploy.yml/badge.svg"
+loading="lazy"
+alt="gh-pages deploy status"
+&gt;&lt;/p&gt;
+&lt;h1 id="welcome-to-my-blog"&gt;&lt;a href="#welcome-to-my-blog" class="header-anchor"&gt;&lt;/a&gt;Welcome to my blog
+&lt;/h1&gt;&lt;p&gt;欢迎来到我的博客，这里记录个人的工作和学习的笔记与思考。&lt;/p&gt;
+&lt;h2 id="关于网站"&gt;&lt;a href="#%e5%85%b3%e4%ba%8e%e7%bd%91%e7%ab%99" class="header-anchor"&gt;&lt;/a&gt;关于网站
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;采用 &lt;a class="link" href="https://gohugo.io" target="_blank" rel="noopener"
+&gt;hugo&lt;/a&gt; 静态网站生成器&lt;/li&gt;
+&lt;li&gt;主题修改自 &lt;a class="link" href="https://jimmycai.com/" target="_blank" rel="noopener"
+&gt;Jimmy&lt;/a&gt; 的 &lt;a class="link" href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener"
+&gt;hugo-theme-stack&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="关于文章"&gt;&lt;a href="#%e5%85%b3%e4%ba%8e%e6%96%87%e7%ab%a0" class="header-anchor"&gt;&lt;/a&gt;关于文章
+&lt;/h2&gt;&lt;p&gt;&lt;strong&gt;郑重声明:&lt;/strong&gt; 本博客所有文章均采用 &lt;a class="link" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh-hans" target="_blank" rel="noopener"
+&gt;署名—非商业性使用—相同方式共享 4.0 协议国际版(CC BY-NC-SA 4.0)&lt;/a&gt;，分享、演绎需准守以下原则:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;署名: 您必须给出&lt;strong&gt;适当的署名&lt;/strong&gt;，提供指向本许可协议的链接，同时标明是否（对原始作品）作了修改 。您可以用任何合理的方式来署名，但是不得以任何方式暗示许可人为您或您的使用背书。&lt;/li&gt;
+&lt;li&gt;非商业使用: 您不得将本作品用于商业目的。&lt;/li&gt;
+&lt;li&gt;相同方式共享: 如果您再混合、转换或者基于本作品进行创作，您必须基于与原先许可协议相同的许可协议分发您贡献的作品。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;署名-非商业性使用-相同方式共享”许可协议该项许可协议规定，只要他人注明您的姓名并在以您的作品为基础创作的新作品上适用同一类型的许可协议，该他人就可基于非商业目的对您的作品重新编排、节选或者以您的作品为基础进行创作。基于您的作品创作的所有新作品都要适用同一类型的许可协议，因此适用该项协议，则对任何以您的原作为基础创作的演绎作品自然同样都不得进行商业性使用。&lt;/p&gt;</description></item><item><title>Search</title><link>/search/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>/search/</guid><description/></item></channel></rss>
